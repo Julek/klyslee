@@ -8,10 +8,8 @@ randSublist :: (RandomGen g) => Int -> [a] -> State g [a]
 randSublist n list = replicateM n (randMember list)
   
 randMember :: (RandomGen g) => [a] -> State g a
-randMember list = do
-  rand <- get
-  let (rind, nrand) = randomR (0, length list -1) rand
-  put nrand
+randMember list = do  
+  rind <- doState $ randomR (0, length list -1)
   return (list!!rind)
   
 doState :: MonadState s m => ( s -> ( a, s ) ) -> m a
