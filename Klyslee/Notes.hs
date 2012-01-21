@@ -1,6 +1,7 @@
 module Klyslee.Notes where
 
 import Klyslee.Breedable
+import Klyslee.GeneticsVars
 import Klyslee.Utils
 
 import System.Random
@@ -37,6 +38,15 @@ instance Breedable Melody where
                                          else
                                            m
                               return (r ++ [from!!i])) [] [0..(tunel - 1)] >>= (return . Melody)
+
+  mutate x = do
+    choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
+    if(mutation <= choice)
+      then
+        return x
+      else
+      do
+        return x
 
 instance Show Melody where
   show (Melody ls) = " " ++ (foldl1 (\x y -> x ++ " " ++ y) $ map (show) ls)

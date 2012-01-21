@@ -12,3 +12,12 @@ leSexyTimeTest = do
   mother <- genRand
   child <- leSexyTime mother father
   return (mother, father, child)
+
+mutateTest :: (Breedable a, RandomGen g, MonadState g m) => m (a, a)
+mutateTest = do
+  child <- genRand
+  mchild <- mutate child
+  return (child, mchild)
+
+runTest :: State StdGen a -> Int -> a
+runTest f seed = evalState f (mkStdGen seed)
