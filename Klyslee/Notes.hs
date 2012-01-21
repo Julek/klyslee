@@ -1,9 +1,14 @@
 module Klyslee.Notes where
 
 import Klyslee.Breedable
+import Klyslee.Utils
 
 import System.Random
 import Control.Monad.State
+
+tunel = 4 :: Int
+
+newtype Melody = Melody [Note]
 
 data Note = Note Octave AbsNote Intonation
 
@@ -14,19 +19,30 @@ data AbsNote = Do | Re | Mi | Fa | Sol | La | Si
 
 data Intonation = Norm | Sharp | Flat
 
+
+instance Breedable Melody where
+  genRand = replicateM tunel (do
+    oct <- doState (randomR (1, 8))
+    n <-doState (randomR (0, 6))
+    i <- doState (randomR (-1, 1))
+    let note = getNote n
+        int = getIntonation i
+    return (Note oct note int)) >>= (return . Melody)
+
+  leSexyTime (Melody m) (Melody f) = foldM (\r i -> do
+                              choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
+                              let from = if(choice < 0.5)
+                                         then
+                                           f
+                                         else
+                                           m
+                              return (r ++ [from!!i])) [] [0..(tunel - 1)] >>= (return . Melody)
+
+instance Show Melody where
+  show (Melody ls) = " " ++ (foldl1 (\x y -> x ++ " " ++ y) $ map (show) ls)
+
 instance Show Note where
   show (Note oct note int) = (show note) ++ (show int) ++ (show oct)
-
-{-instance Breedable Note where
-  genRand = do
-    rand1 <- get
-    let (oct, rand2) = (randomR (1, 8) rand1)
-        (n, rand3) = randomR (0, 6) rand2
-        (i, rand4) = randomR (-1, 1) rand3
-        note = getNote n
-        int = getIntonation i
-    return (Note oct note int)-}
-  
 
 instance Show Intonation where
   show Norm = ""
