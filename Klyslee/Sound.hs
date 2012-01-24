@@ -19,4 +19,4 @@ makeWavFile :: WAVE -> String -> IO ()
 makeWavFile wav name = putWAVEFile name wav
 
 outputWave :: [Double] -> String -> IO()
-outputWave freqs name = makeWavFile (waveData $ foldl1 (++) $ map (\x -> map (:[]) $ sound x samplesPS 1 (maxBound `div` 2)) freqs) name
+outputWave freqs name = makeWavFile (waveData $ foldl1 (++) $ map (\x -> map (:[]) $ sound x samplesPS 0.5 (maxBound `div` 2)) freqs) name

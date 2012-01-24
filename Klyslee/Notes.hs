@@ -9,7 +9,7 @@ import Data.Maybe
 import System.Random
 import Control.Monad.State
 
-tunel = 7 :: Int
+tunel = 8 :: Int
 
 range = (1, 8)
 
@@ -91,6 +91,15 @@ getNote 4 = Sol
 getNote 5 = La
 getNote 6 = Si
 
+fromNote :: AbsNote -> Int
+fromNote Do = 0
+fromNote Re = 1
+fromNote Mi = 2
+fromNote Fa = 3
+fromNote Sol = 4
+fromNote La = 5
+fromNote Si = 6
+
 standardise :: Note -> Note
 standardise (Note oct Fa Flat) = Note oct Mi Norm
 standardise (Note oct Do Flat) = Note oct Si Norm
@@ -116,6 +125,11 @@ interval_fitness_wrapper :: [Note] -> Maybe (Double, [Note])
 interval_fitness_wrapper (n1:n2:ns) = Just (interval_fitness n1 n2, n2:ns)
 interval_fitness_wrapper x = Nothing
 
+noteToFreq :: Note -> Double
+noteToFreq st@(Note oct note int) =
+  440 * (2 ** (((fromIntegral (12*(oct - 1) + 4) :: Double) + (fromIntegral . fromNote $ note :: Double) - 49)/12))
+
+{-
 a4 = 440.0
 
 noteToFreq :: Note -> Double
@@ -140,3 +154,4 @@ noteToFreq st@(Note oct note int) =
                      Note _ Si Norm  -> 2.0
                      _    -> 15.0
 
+-}
