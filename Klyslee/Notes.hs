@@ -57,7 +57,7 @@ instance Breedable Melody where
         return s
       else
       do
-        ind <- doState (randomR (0, tunel))
+        ind <- doState (randomR (0, tunel - 1))
         oct <- doState (randomR range)
         n <- doState (randomR (0, 6))
         i <- doState (randomR (-1, 0))
