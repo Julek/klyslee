@@ -4,6 +4,7 @@ import Klyslee.Notes
 import Klyslee.Sound
 
 import Control.Monad.State
+import System
 import System.Random
 
 main :: IO ()
@@ -14,4 +15,5 @@ main = do
   print mel
   print $ freqs
   outputWave freqs "temp.wav" 
+  system("aplay temp.wav > /dev/null")
   return ()

@@ -20,7 +20,7 @@ newtype Melody = Melody [Note]
 data Note = Note Octave AbsNote Intonation
             deriving(Eq)
                     
-data Note = Note Octave AbsNote Intonation
+data Harmonic = Harmonic Octave AbsNote Intonation
             deriving(Eq)
                     
 type Octave = Int
