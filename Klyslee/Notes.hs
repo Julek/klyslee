@@ -9,7 +9,7 @@ import Data.Maybe
 import System.Random
 import Control.Monad.State
 
-tunel = 4 :: Int
+tunel = 6 :: Int
 
 intervals = [((Do, Norm), [(Mi, Norm), (Mi, Flat), (Sol, Norm)]), ((Re, Flat), [(Fa, Norm), (Fa, Flat), (La, Flat)]), ((Re, Norm), [(Sol, Flat), (Fa, Norm), (La, Norm)]), ((Mi, Flat), [(Sol, Norm), (Sol, Flat), (Si, Flat)]), ((Mi, Norm), [(La, Flat), (Sol, Norm), (Si, Norm)]), ((Fa, Norm), [(La, Norm), (La, Flat), (Do, Norm)]), ((Sol, Flat), [(Si, Flat), (La, Norm), (Re, Flat)]), ((Sol, Norm), [(Si, Norm), (Si, Flat), (Re, Norm)]), ((La, Flat), [(Do, Norm), (Si, Norm), (Mi, Flat)]), ((La, Norm), [(Re, Flat), (Do, Norm), (Mi, Norm)]), ((Si, Flat), [(Re, Norm), (Re, Flat), (Fa, Norm)]), ((Si, Norm), [(Mi, Flat), (Re, Norm), (Sol, Flat)])]
 
@@ -45,14 +45,23 @@ instance Breedable Melody where
                                            m
                               return (r ++ [from!!i])) [] [0..(tunel - 1)] >>= (return . Melody)
 
-  mutate x = do
+  mutate s@(Melody x) = do
     choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
     if(mutation <= choice)
       then
-        return x
+        return s
       else
       do
-        return x
+        ind <- doState (randomR (0, tunel))
+        oct <- doState (randomR (1, 8))
+        n <- doState (randomR (0, 6))
+        i <- doState (randomR (-1, 0))
+        let note = getNote n
+            int = getIntonation i
+            (f, _:b) = splitAt ind x
+        return (Melody $ f ++ (Note oct note int):b)
+                      
+                                     
 
 instance Show Melody where
   show (Melody ls) = " " ++ (foldl1 (\x y -> x ++ " " ++ y) $ map (show) ls)
@@ -101,3 +110,28 @@ interval_fitness (Note oct1 note1 int1) (Note oct2 note2 int2) = interval_penalt
 interval_fitness_wrapper :: [Note] -> Maybe (Double, [Note])
 interval_fitness_wrapper (n1:n2:ns) = Just (interval_fitness n1 n2, n2:ns)
 interval_fitness_wrapper x = Nothing
+
+a4 = 440.0
+
+noteToFreq :: Note -> Double
+noteToFreq st@(Note oct note int) =
+    if oct >= 1 && oct < 9
+    then if n /= 15.0
+         then (2 ** (n + (12.0 * ((fromIntegral oct ::Double) - 4.0)))) * a4
+         else error $ "Bad note: " ++ (show note)
+    else error $ "Bad octave: " ++ show oct
+             where n = case st of
+                     Note _ Do Norm  -> -9.0
+                     Note _ Re Flat -> -8.0
+                     Note _ Re Norm  -> -7.0
+                     Note _ Mi Flat -> -6.0
+                     Note _ Mi Norm  -> -5.0
+                     Note _ Fa Norm  -> -4.0
+                     Note _ Sol Flat -> -3.0
+                     Note _ Sol Norm  -> -2.0
+                     Note _ La Flat -> -1.0
+                     Note _ La Norm  -> 0.0
+                     Note _ Si Flat -> 1.0
+                     Note _ Si Norm  -> 2.0
+                     _    -> 15.0
+
