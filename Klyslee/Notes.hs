@@ -11,7 +11,7 @@ import Control.Monad.State
 
 tunel = 8 :: Int
 
-range = (1, 8)
+range = (3, 6)
 
 intervals = [((Do, Norm), [(Mi, Norm), (Mi, Flat), (Sol, Norm)]), ((Re, Flat), [(Fa, Norm), (Fa, Flat), (La, Flat)]), ((Re, Norm), [(Sol, Flat), (Fa, Norm), (La, Norm)]), ((Mi, Flat), [(Sol, Norm), (Sol, Flat), (Si, Flat)]), ((Mi, Norm), [(La, Flat), (Sol, Norm), (Si, Norm)]), ((Fa, Norm), [(La, Norm), (La, Flat), (Do, Norm)]), ((Sol, Flat), [(Si, Flat), (La, Norm), (Re, Flat)]), ((Sol, Norm), [(Si, Norm), (Si, Flat), (Re, Norm)]), ((La, Flat), [(Do, Norm), (Si, Norm), (Mi, Flat)]), ((La, Norm), [(Re, Flat), (Do, Norm), (Mi, Norm)]), ((Si, Flat), [(Re, Norm), (Re, Flat), (Fa, Norm)]), ((Si, Norm), [(Mi, Flat), (Re, Norm), (Sol, Flat)])]
 
