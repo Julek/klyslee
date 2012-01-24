@@ -9,12 +9,17 @@ import Data.Maybe
 import System.Random
 import Control.Monad.State
 
-tunel = 6 :: Int
+tunel = 7 :: Int
+
+range = (1, 8)
 
 intervals = [((Do, Norm), [(Mi, Norm), (Mi, Flat), (Sol, Norm)]), ((Re, Flat), [(Fa, Norm), (Fa, Flat), (La, Flat)]), ((Re, Norm), [(Sol, Flat), (Fa, Norm), (La, Norm)]), ((Mi, Flat), [(Sol, Norm), (Sol, Flat), (Si, Flat)]), ((Mi, Norm), [(La, Flat), (Sol, Norm), (Si, Norm)]), ((Fa, Norm), [(La, Norm), (La, Flat), (Do, Norm)]), ((Sol, Flat), [(Si, Flat), (La, Norm), (Re, Flat)]), ((Sol, Norm), [(Si, Norm), (Si, Flat), (Re, Norm)]), ((La, Flat), [(Do, Norm), (Si, Norm), (Mi, Flat)]), ((La, Norm), [(Re, Flat), (Do, Norm), (Mi, Norm)]), ((Si, Flat), [(Re, Norm), (Re, Flat), (Fa, Norm)]), ((Si, Norm), [(Mi, Flat), (Re, Norm), (Sol, Flat)])]
 
 newtype Melody = Melody [Note]
 
+data Note = Note Octave AbsNote Intonation
+            deriving(Eq)
+                    
 data Note = Note Octave AbsNote Intonation
             deriving(Eq)
                     
@@ -29,7 +34,7 @@ data Intonation = Norm | Flat
 
 instance Breedable Melody where
   genRand = replicateM tunel (do
-    oct <- doState (randomR (1, 8))
+    oct <- doState (randomR range)
     n <-doState (randomR (0, 6))
     i <- doState (randomR (-1, 0))
     let note = getNote n
@@ -53,7 +58,7 @@ instance Breedable Melody where
       else
       do
         ind <- doState (randomR (0, tunel))
-        oct <- doState (randomR (1, 8))
+        oct <- doState (randomR range)
         n <- doState (randomR (0, 6))
         i <- doState (randomR (-1, 0))
         let note = getNote n
@@ -98,7 +103,7 @@ interval_fitness :: Note -> Note -> Double
 interval_fitness (Note oct1 note1 int1) (Note oct2 note2 int2) = interval_penalty + octave_penalty
   where interval_penalty = if(elem (note2, int2) $ fromJust $ lookup (note1, int1) intervals)
                            then
-                             0 + octave_penalty
+                             0
                            else
                              1
         octave_penalty = if(abs(oct1 - oct2) < 2)
