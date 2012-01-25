@@ -10,7 +10,7 @@ import System.Random
 main :: IO ()
 main = do
   g <- getStdGen
-  let mel@(Melody notes) = evalState (ga song_fitness (6.0) 100) g
+  let mel@(Melody notes) = evalState (ga song_fitness (5.0) 100) g
       freqs = map noteToFreq notes
   print mel
   print $ freqs

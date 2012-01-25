@@ -9,7 +9,7 @@ import Data.Maybe
 import System.Random
 import Control.Monad.State
 
-tunel = 8 :: Int
+tunel = 10 :: Int
 
 range = (3, 6)
 
