@@ -22,9 +22,10 @@ instance Breedable Int where
         return (complementBit x offset)
   leSexyTime m f = foldM (\ r i -> do
                               choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
-                              if(choice < 0.5)
-                                then
-                                return (fst $ xchgBits r f i)
-                                else
-                                return (fst $ xchgBits r m i)
+                              let from = if(choice < 0.5)
+                                         then
+                                           f
+                                         else
+                                           m
+                              return (fst $ xchgBits r from i)
                           ) 0 [0..((bitSize (0::Int)) - 1)]
