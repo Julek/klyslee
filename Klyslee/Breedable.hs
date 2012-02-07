@@ -1,9 +1,13 @@
 module Klyslee.Breedable where
 
-import System.Random
+import Klyslee.Monad
+
 import Control.Monad.State
+import Control.Monad.Random
+import Control.Monad.Reader
+import System.Random
 
 class Breedable a where
-  leSexyTime :: (RandomGen g, MonadState g m) => a -> a -> m a
-  mutate :: (RandomGen g, MonadState g m) => a -> m a
-  genRand :: (RandomGen g, MonadState g m) => m a
+  leSexyTime :: (MonadRandom m, MonadReader Bindings m) => a -> a -> m a
+  mutate ::  (MonadRandom m, MonadReader Bindings m) => a -> m a
+  genRand :: (MonadRandom m, MonadReader Bindings m) => m a

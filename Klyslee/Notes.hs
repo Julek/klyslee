@@ -2,14 +2,15 @@ module Klyslee.Notes where
 
 import Klyslee.Breedable
 import Klyslee.GeneticsVars
+import Klyslee.Monad
 import Klyslee.Utils
 
 import Data.List
 import Data.Maybe
-import System.Random
+import Control.Monad.Random
+import Control.Monad.Reader
 import Control.Monad.State
-
-tunel = 16 :: Int
+import System.Random
 
 range = (4, 6)
 
@@ -35,34 +36,39 @@ data Intonation = Norm | Flat
 
 
 instance Breedable Melody where
-  genRand = replicateM tunel (do
-    oct <- doState (randomR range)
-    n <-doState (randomR (0, 6))
-    i <- doState (randomR (-1, 0))
-    let note = getNote n
-        int = getIntonation i
-    return (standardise $ Note oct note int)) >>= (return . Melody)
+  genRand = do
+    tunel <- ask >>= return . tuneLength 
+    replicateM tunel (do
+                         oct <- getRandomR range
+                         n <-getRandomR (0, 6)
+                         i <- getRandomR (-1, 0)
+                         let note = getNote n
+                             int = getIntonation i
+                         return (standardise $ Note oct note int)) >>= (return . Melody)
 
-  leSexyTime (Melody m) (Melody f) = foldM (\r i -> do
-                              choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
-                              let from = if(choice < 0.5)
-                                         then
-                                           f
-                                         else
-                                           m
-                              return (r ++ [from!!i])) [] [0..(tunel - 1)] >>= (return . Melody)
+  leSexyTime (Melody m) (Melody f) = do
+    tunel <- ask >>= return . tuneLength
+    foldM (\r i -> do
+              choice <- getRandom :: (MonadRandom m) => m Float
+              let from = if(choice < 0.5)
+                         then
+                           f
+                         else
+                           m
+              return (r ++ [from!!i])) [] [0..(tunel - 1)] >>= (return . Melody)
 
   mutate s@(Melody x) = do
-    choice <- (doState  random) :: (RandomGen g, MonadState g m) => m Float
+    choice <- getRandom :: (MonadRandom m) => m Float
     if(mutation <= choice)
       then
         return s
       else
       do
-        ind <- doState (randomR (0, tunel - 1))
-        oct <- doState (randomR range)
-        n <- doState (randomR (0, 6))
-        i <- doState (randomR (-1, 0))
+        tunel <- ask >>= return . tuneLength 
+        ind <- getRandomR (0, tunel - 1)
+        oct <- getRandomR range
+        n <- getRandomR (0, 6)
+        i <- getRandomR (-1, 0)
         let note = getNote n
             int = getIntonation i
             (f, _:b) = splitAt ind x

@@ -5,18 +5,20 @@ import Klyslee.GeneticsVars
 import Klyslee.Monad
 import Klyslee.Utils
 
+import Control.Monad.Random
+import Control.Monad.Reader
 import Control.Monad.State
 import Data.List
 import Data.List.Split
 import System.Random
-      
 
-ga :: (Breedable a, RandomGen g) => (a -> Double) -> Double -> Int -> State g a
+
+ga :: (Breedable a, MonadRandom m, MonadReader Bindings m) => (a -> Double) -> Double -> Int -> m a
 ga fit goal pops = do 
   init_population <- genPopulation pops
   ga' fit goal pops init_population
 
-ga' :: (Breedable a, RandomGen g) => (a -> Double) -> Double -> Int -> [a] -> State g a
+ga' :: (Breedable a, MonadRandom m, MonadReader Bindings m) => (a -> Double) -> Double -> Int -> [a] -> m a
 ga' fit goal pops pop = do
   let fittest = minimumBy (\x y -> compare (fit x) (fit y)) pop
   if((fit fittest) <= goal)
@@ -30,5 +32,5 @@ ga' fit goal pops pop = do
       npop <- mapM (uncurry leSexyTime) parents >>= (mapM mutate)
       ga' fit goal pops npop
 
-genPopulation :: (Breedable a, RandomGen g) => Int -> State g [a]
+genPopulation :: (Breedable a, MonadReader Bindings m, MonadRandom m) => Int -> m [a]
 genPopulation n = replicateM n genRand

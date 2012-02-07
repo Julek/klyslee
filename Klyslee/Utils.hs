@@ -1,15 +1,16 @@
 module Klyslee.Utils where
 
+import Control.Monad.Random
 import Control.Monad.State
 import Data.Bits
 import System.Random
 
-randSublist :: (RandomGen g) => Int -> [a] -> State g [a]
+randSublist :: (MonadRandom m) => Int -> [a] -> m [a]
 randSublist n list = replicateM n (randMember list)
   
-randMember :: (RandomGen g) => [a] -> State g a
+randMember :: (MonadRandom m) => [a] -> m a
 randMember list = do  
-  rind <- doState $ randomR (0, length list -1)
+  rind <- getRandomR (0, length list -1)
   return (list!!rind)
   
 doState :: MonadState s m => ( s -> ( a, s ) ) -> m a

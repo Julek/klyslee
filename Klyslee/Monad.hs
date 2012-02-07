@@ -3,7 +3,7 @@ module Klyslee.Monad where
 import Control.Monad.Random
 import Control.Monad.Reader
 
-data Bindings = Bindings {limits :: ( Float, Float )}
+data Bindings = Bindings {tuneLength :: Int}
 
 newtype RandReader g a = RandReader { runRandReader :: RandT g (Reader Bindings) a }
   deriving (Monad, MonadReader Bindings, MonadRandom)
