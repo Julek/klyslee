@@ -2,6 +2,7 @@ module Klyslee.Genetics where
 
 import Klyslee.Breedable
 import Klyslee.GeneticsVars
+import Klyslee.Monad
 import Klyslee.Utils
 
 import Control.Monad.State
