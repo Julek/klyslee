@@ -3,14 +3,11 @@ module Klyslee.Notes where
 import Klyslee.Args
 import Klyslee.Breedable
 import Klyslee.GeneticsVars
-import Klyslee.Utils
 
 import Data.List
 import Data.Maybe
 import Control.Monad.Random
 import Control.Monad.Reader
-import Control.Monad.State
-import System.Random
 
 range = (4, 6)
 

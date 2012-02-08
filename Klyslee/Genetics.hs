@@ -7,10 +7,8 @@ import Klyslee.Utils
 
 import Control.Monad.Random
 import Control.Monad.Reader
-import Control.Monad.State
 import Data.List
 import Data.List.Split
-import System.Random
 
 
 ga :: (Breedable a, MonadRandom m, MonadReader Bindings m) => (a -> Double) -> Double -> Int -> m a
