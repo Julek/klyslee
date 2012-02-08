@@ -1,8 +1,8 @@
 module Klyslee.Notes where
 
+import Klyslee.Args
 import Klyslee.Breedable
 import Klyslee.GeneticsVars
-import Klyslee.Monad
 import Klyslee.Utils
 
 import Data.List

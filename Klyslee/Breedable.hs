@@ -1,6 +1,6 @@
 module Klyslee.Breedable where
 
-import Klyslee.Monad
+import Klyslee.Args
 
 import Control.Monad.State
 import Control.Monad.Random

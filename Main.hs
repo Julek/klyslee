@@ -2,6 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 import Klyslee.Genetics
+import Klyslee.Args
 import Klyslee.Monad
 import Klyslee.Notes
 import Klyslee.Sound

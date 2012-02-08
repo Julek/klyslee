@@ -2,7 +2,7 @@ module Klyslee.Genetics where
 
 import Klyslee.Breedable
 import Klyslee.GeneticsVars
-import Klyslee.Monad
+import Klyslee.Args
 import Klyslee.Utils
 
 import Control.Monad.Random
