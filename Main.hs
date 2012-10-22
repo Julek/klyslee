@@ -8,7 +8,8 @@ import Klyslee.Notes
 import Klyslee.Sound
 
 import Control.Monad.State
-import System
+import System.Environment
+import System.Process
 import System.Random
 
 main :: IO ()
